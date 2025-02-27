@@ -77,6 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(movie.title.length > 14
                       ? '${movie.title.substring(0, 10)}...'
                       : movie.title),
+                  style: const TextStyle(fontWeight:
+                  FontWeight.bold), ),
+
                 ]),
               );
             },
@@ -93,11 +96,15 @@ class _HomeScreenState extends State<HomeScreen> {
         title: Text('Pilem'),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildMovieList('All Movies', _allMovies),
-            _buildMovieList('Trending Movies', _trendingMovies),
-            _buildMovieList('Popular Movies', _popularMovies)
+        child: Padding(
+           padding: const EdgeInsets.symmetric(horizontal: 8),
+           child: Column(
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+           _buildMoviesList('All Movies', _allMovies),
+           _buildMoviesList('Trending Movies', _trendingMovies),
+           _buildMoviesList('Popular Movies', _popularMovies)
+
           ],
         ),
       ),
