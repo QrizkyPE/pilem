@@ -24,6 +24,6 @@ class Movie {
         posterPath: json['posterPath'],
         backdropPath: json['backdropPath'],
         releaseDate: json['releaseDate'],
-        voteAverage: json['voteAverage']);
+        voteAverage: json['voteAverage'].toDouble(),);
   }
 }
