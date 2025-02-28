@@ -1,26 +1,21 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:pilem/models/movie.dart';
+import 'package:pilem/screens/detail_screen.dart';
 import 'package:pilem/services/api_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   final ApiService _apiService = ApiService();
-
   List<Movie> _allMovies = [];
   List<Movie> _trendingMovies = [];
   List<Movie> _popularMovies = [];
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _loadMovies();
   }
@@ -32,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
         await _apiService.getTrendingMovies();
     final List<Map<String, dynamic>> popularMoviesData =
         await _apiService.getPopularMovies();
-
     setState(() {
       _allMovies = allMoviesData.map((e) => Movie.fromJson(e)).toList();
       _trendingMovies =
@@ -41,18 +35,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Widget _buildMovieList(String title, List<Movie> movies) {
+  Widget _buildMoviesList(String title, List<Movie> movies) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.all(8),
+          padding: EdgeInsets.all(8.0),
           child: Text(
             title,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         SizedBox(
@@ -63,28 +54,40 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (BuildContext context, int index) {
               final Movie movie = movies[index];
               return GestureDetector(
-                onTap: () {},
-                child: Column(children: [
-                  Image.network(
-                    'https://image.tmdb.org/t/p/w500${movie.posterPath}',
-                    height: 150,
-                    width: 100,
-                    fit: BoxFit.cover,
+                // onTap: () {},
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailScreen(movie: movie),
                   ),
-                  SizedBox(
-                    height: 4,
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      Image.network(
+                        'https://image.tmdb.org/t/p/w500${movie.posterPath}',
+                        height: 150,
+                        width: 100,
+                        fit: BoxFit.cover,
+                      ),
+                      SizedBox(
+                        height: 4,
+                      ),
+                      Text(
+                        movie.title.length > 14
+                            ? '${movie.title.substring(0, 10)}...'
+                            : movie.title,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
-                  Text(movie.title.length > 14
-                      ? '${movie.title.substring(0, 10)}...'
-                      : movie.title),
-                  style: const TextStyle(fontWeight:
-                  FontWeight.bold), ),
-
-                ]),
+                  // ),
+                ),
               );
             },
           ),
-        )
+        ),
       ],
     );
   }
@@ -92,20 +95,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Pilem'),
-      ),
+      appBar: AppBar(title: Text('Pilem')),
       body: SingleChildScrollView(
         child: Padding(
-           padding: const EdgeInsets.symmetric(horizontal: 8),
-           child: Column(
-           crossAxisAlignment: CrossAxisAlignment.start,
-           children: [
-           _buildMoviesList('All Movies', _allMovies),
-           _buildMoviesList('Trending Movies', _trendingMovies),
-           _buildMoviesList('Popular Movies', _popularMovies)
-
-          ],
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildMoviesList('All Movies', _allMovies),
+              _buildMoviesList('Trending Movies', _trendingMovies),
+              _buildMoviesList('Popular Movies', _popularMovies)
+            ],
+          ),
         ),
       ),
     );
